@@ -1,0 +1,78 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap');
+
+:root {
+  /* Fondos y Estructura Base */
+  --color-beige-arena: #EFEBE4;
+  --color-beige-arena-light: #FAF8F5;
+  --color-cafe-oscuro: #3E2723;
+  --color-cafe-oscuro-muted: #6D5A54;
+
+  /* Neutros Cálidos (Reemplazo de grises planos/fríos) */
+  --color-neutral-surface: #F5F2EC;
+  --color-neutral-border: #E2DDD5;
+  --color-neutral-subtle: rgba(62, 39, 35, 0.06);
+  --color-neutral: rgb(79, 74, 73);
+
+  /* Acciones y Regiones (Ajuste de contraste) */
+  --color-verde-selva: #2E7D32;
+  --color-amarillo-colombia: #D99B00; /* Nuevo tono ámbar con alto contraste */
+  --color-azul-oceano: #003087;
+  --color-rojo-terracota: #D84315;
+  --color-rojo-alerta: #C8102E;
+
+  /* Tipografía */
+  --font-family: 'Nunito', sans-serif;
+
+  /* Geometría y Sombras */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  --shadow-card: 0 4px 12px rgba(62, 39, 35, 0.06);
+  --shadow-active: 0 6px 16px rgba(62, 39, 35, 0.12);
+  --shadow-button: 0 4px 0px rgba(0, 0, 0, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-beige-arena);
+  color: var(--color-cafe-oscuro);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: var(--font-family);
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Estado activo reusable */
+.is-active {
+  border-color: var(--color-rojo-terracota) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-active) !important;
+}
+
+/* Scrollbar refinado con neutros cálidos */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-beige-arena);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cafe-oscuro-muted);
+}

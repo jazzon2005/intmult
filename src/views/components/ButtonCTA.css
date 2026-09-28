@@ -1,0 +1,41 @@
+.btn-cta {
+  font-family: var(--font-family);
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  padding: 14px 28px;
+  border-radius: var(--radius-md);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.15s ease-in-out;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.btn-cta--primary {
+  background-color: var(--color-verde-selva);
+  box-shadow: var(--shadow-button);
+}
+
+.btn-cta--secondary {
+  background-color: var(--color-azul-oceano);
+  box-shadow: var(--shadow-button);
+}
+
+.btn-cta--danger {
+  background-color: var(--color-rojo-terracota);
+  box-shadow: var(--shadow-button);
+}
+
+.btn-cta--disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-cta--full {
+  width: 100%;
+}

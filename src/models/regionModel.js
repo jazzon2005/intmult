@@ -1,0 +1,60 @@
+// src/models/regionModel.js
+import { THEME } from '../config/theme';
+
+export const REGIONS_DATA = {
+  andina: {
+    id: 'andina',
+    name: 'Región Andina',
+    accent: 'Acento Andino',
+    description: 'Descubre la calidez y musicalidad del acento andino. Aprende sus expresiones, sus palabras únicas y conéctate con su gente.',
+    stats: 75,
+    progress: 60,
+    difficulty: 40,
+    accentType: 'Paisa, Cundiboyacense y Santandereano',
+    color: THEME.colors.rojoTerracota,
+  },
+  caribe: {
+    id: 'caribe',
+    name: 'Región Caribe',
+    accent: 'Acento Costeño',
+    description: 'Sumérgete en la rapidez, alegría y particular fonética de la costa norte. Palabras llenas de sabor y frescura.',
+    stats: 85,
+    progress: 80,
+    difficulty: 30,
+    accentType: 'Costeño / Sabanero',
+    color: THEME.colors.amarilloColombia,
+  },
+  pacifico: {
+    id: 'pacifico',
+    name: 'Región Pacífico',
+    accent: 'Acento Valluno / Chocoano',
+    description: 'Explora la riqueza musical y oral del occidente colombiano. Cadencia única y modismos impregnados de historia.',
+    stats: 50,
+    progress: 30,
+    difficulty: 50,
+    accentType: 'Valluno y Chocoano',
+    color: THEME.colors.azulOceano,
+  },
+  orinoquia: {
+    id: 'orinoquia',
+    name: 'Región Orinoquía',
+    accent: 'Acento Llanero',
+    description: 'Siente la fuerza del llano a través de sus dichos, cantos de vaquería y modismos criollos autóctonos.',
+    stats: 40,
+    progress: 10,
+    difficulty: 65,
+    accentType: 'Llanero',
+    color: THEME.colors.verdeSelva,
+  },
+  amazonía: {
+    id: 'amazonia',
+    name: 'Región Amazonía',
+    accent: 'Acento Amazónico',
+    description: 'Una mezcla frontera de lenguas indígenas y español amazónico con una entonación suave y pausada.',
+    stats: 20,
+    progress: 0,
+    difficulty: 70,
+    accentType: 'Amazónico',
+    color: THEME.colors.cafeOscuro,
+  }
+};

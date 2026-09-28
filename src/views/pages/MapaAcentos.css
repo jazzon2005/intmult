@@ -1,0 +1,122 @@
+.mapa-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--color-cafe-oscuro);
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.map-card {
+  background-color: var(--color-beige-arena-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(62, 39, 35, 0.08);
+}
+
+.map-placeholder {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.map-instruction {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-cafe-oscuro-muted);
+}
+
+.region-buttons-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.region-tag {
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 14px;
+  border: 1px solid var(--color-cafe-oscuro-muted);
+  cursor: pointer;
+  background-color: #fff;
+  color: var(--color-cafe-oscuro);
+  transition: transform 0.1s ease;
+}
+
+.region-tag--andina { background-color: var(--color-rojo-terracota); color: #fff; }
+.region-tag--caribe { background-color: var(--color-amarillo-colombia); color: #fff; }
+.region-tag--pacifico { background-color: var(--color-azul-oceano); color: #fff; }
+.region-tag--orinoquia { background-color: var(--color-verde-selva); color: #fff; }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.info-card {
+  background-color: var(--color-beige-arena-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(62, 39, 35, 0.08);
+}
+
+.info-card--flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.region-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.region-icon { font-size: 28px; }
+
+.region-subtext {
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--color-cafe-oscuro-muted);
+  letter-spacing: 0.8px;
+}
+
+.region-name {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--color-cafe-oscuro);
+}
+
+.accent-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--color-rojo-terracota);
+}
+
+.accent-divider {
+  width: 40px;
+  height: 4px;
+  background-color: var(--color-rojo-terracota);
+  border-radius: var(--radius-full);
+  margin: 8px 0 16px 0;
+}
+
+.accent-description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-cafe-oscuro-muted);
+  margin-bottom: 20px;
+}
