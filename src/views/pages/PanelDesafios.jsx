@@ -1,3 +1,4 @@
+// src/views/pages/PanelDesafios.jsx
 import React from 'react';
 import { Target, Lock, CheckCircle2, Zap, Flame, Award, Play } from 'lucide-react';
 import { useUser } from '../../controllers/useUser';
@@ -6,16 +7,9 @@ import { ProgressBar } from '../components/ProgressBar';
 import { ButtonCTA } from '../components/ButtonCTA';
 import './PanelDesafios.css';
 
-const achievementIconMap = {
-  trophy: Award,
-  flame: Flame,
-  zap: Zap,
-  target: Target,
-};
-
 export const PanelDesafios = () => {
-  const { levelData, unlockedAchievementsList, streakText, exploredText } = useUser();
-  const { challenges, setActiveTab } = useApp();
+  const { levelData, badgesList, streakText, exploredText } = useUser();
+  const { challenges = [], setActiveTab } = useApp();
 
   return (
     <div className="panel-container">
@@ -26,12 +20,16 @@ export const PanelDesafios = () => {
           <div className="panel-card">
             <h2 className="section-title">DESAFÍOS DISPONIBLES</h2>
             <div className="challenge-list">
-              {challenges.map((ch) => {
+              {(challenges || []).map((ch) => {
                 const isAvailable = ch.status === 'available';
+                const isCompleted = ch.status === 'completed';
+
                 return (
                   <div key={ch.id} className="challenge-item">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {isAvailable ? (
+                      {isCompleted ? (
+                        <CheckCircle2 size={16} color="var(--color-verde-selva)" />
+                      ) : isAvailable ? (
                         <Target size={16} color="var(--color-rojo-terracota)" />
                       ) : (
                         <Lock size={16} color="var(--color-cafe-oscuro-muted)" />
@@ -42,7 +40,7 @@ export const PanelDesafios = () => {
                       </div>
                     </div>
                     <span className={`status-badge ${isAvailable ? 'status-badge--available' : ''}`}>
-                      {isAvailable ? '¡Disponible!' : 'Bloqueado'}
+                      {isCompleted ? 'Completado' : isAvailable ? '¡Disponible!' : 'Bloqueado'}
                     </span>
                   </div>
                 );
@@ -73,12 +71,12 @@ export const PanelDesafios = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Zap size={16} color="var(--color-amarillo-colombia)" />
               <span className="card-label">
-                NIVEL: {levelData.levelTitle.toUpperCase()} (NV. {levelData.currentLevel})
+                NIVEL: {(levelData?.levelTitle || 'EXPLORADOR').toUpperCase()} (NV. {levelData?.currentLevel || 1})
               </span>
             </div>
             <div style={{ marginTop: '10px' }}>
               <ProgressBar
-                value={levelData.progressPercentage}
+                value={levelData?.progressPercentage || 0}
                 color="var(--color-neutral)"
                 showPercentage={false}
               />
@@ -105,15 +103,18 @@ export const PanelDesafios = () => {
               <span className="card-label">LOGROS DESBLOQUEADOS</span>
             </div>
             <div className="badge-row">
-              {unlockedAchievementsList.map((ach) => {
-                const IconComp = achievementIconMap[ach.iconKey] || Award;
+              {(badgesList || []).map((badge) => {
+                const IconComp = badge.icon || Award;
                 return (
                   <div
-                    key={ach.id}
-                    title={`${ach.title}: ${ach.description}`}
-                    className={`achievement-icon ${ach.isUnlocked ? 'achievement-icon--unlocked' : ''}`}
+                    key={badge.id}
+                    title={badge.name}
+                    className={`achievement-icon ${badge.unlocked ? 'achievement-icon--unlocked' : ''}`}
                   >
-                    <IconComp size={20} color={ach.isUnlocked ? "var(--color-rojo-terracota)" : "var(--color-cafe-oscuro-muted)"} />
+                    <IconComp
+                      size={20}
+                      color={badge.unlocked ? 'var(--color-rojo-terracota)' : 'var(--color-cafe-oscuro-muted)'}
+                    />
                   </div>
                 );
               })}

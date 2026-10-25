@@ -1,9 +1,11 @@
 import React from 'react';
 import { Users, Compass, Headphones } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 import { ButtonCTA } from '../components/ButtonCTA';
 import './Comunidad.css';
 
 export const Comunidad = () => {
+  const { setActiveTab, user } = useApp();
   return (
     <div className="comunidad-container">
       {/* Hero Section */}
@@ -15,8 +17,12 @@ export const Comunidad = () => {
         <div className="hero-content">
           <h1>La mejor manera de aprender acentos colombianos</h1>
           <div className="hero-actions">
-            <ButtonCTA fullWidth variant="primary">EMPEZAR AHORA</ButtonCTA>
-            <button className="btn-outline">TENGO CUENTA</button>
+            <ButtonCTA onClick={() => setActiveTab('mapa')} fullWidth variant="primary">
+              EMPEZAR AHORA
+            </ButtonCTA>
+            <button className="btn-outline" onClick={() => setActiveTab('perfil')}>
+              {user?.isInitialized ? `VER PERFIL (${user.name})` : 'CREAR PERFIL'}
+            </button>
           </div>
         </div>
       </section>

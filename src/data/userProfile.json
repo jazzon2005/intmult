@@ -1,31 +1,29 @@
 {
   "user": {
-    "id": "usr_101",
-    "name": "María Rodríguez",
-    "avatar": "M",
+    "id": "",
+    "name": "",
+    "avatar": "?",
+    "role": "Explorador Dialectal",
     "joinedYear": 2026,
-    "title": "EXPLORADOR DIALECTAL",
-    "currentLevel": 3,
-    "xp": 1450,
-    "xpNextLevel": 2000,
-    "streakDays": 4,
-    "completedChallengesCount": 6
+    "isInitialized": false,
+    "hasAcceptedAgeWarning": false
   },
-  "regionsProgress": {
-    "andina": { "progress": 60, "stats": 80, "difficulty": 40 },
-    "caribe": { "progress": 85, "stats": 90, "difficulty": 30 },
-    "pacifico": { "progress": 30, "stats": 50, "difficulty": 70 },
-    "orinoquia": { "progress": 10, "stats": 30, "difficulty": 60 },
-    "amazonia": { "progress": 0, "stats": 10, "difficulty": 80 }
+  "stats": {
+    "currentLevel": 1,
+    "levelTitle": "Novato Dialectal",
+    "currentXP": 0,
+    "nextLevelXP": 500,
+    "streakDays": 1,
+    "exploredRegionsCount": 0,
+    "totalRegionsCount": 5
   },
-  "completedChallenges": ["ch_01", "ch_02", "ch_03", "ch_04", "ch_05", "ch_06"],
-  "unlockedBadges": ["bdg_01", "bdg_02", "bdg_03", "bdg_04"],
-  "badgesCatalog": [
-    { "id": "bdg_01", "iconKey": "palmtree", "name": "Master Costeño", "description": "Completaste 5 lecciones del Caribe" },
-    { "id": "bdg_02", "iconKey": "coffee", "name": "Jerga Paisa", "description": "Completaste 5 lecciones de la Región Andina" },
-    { "id": "bdg_03", "iconKey": "flame", "name": "Racha 3 Días", "description": "Mantuviste tu racha 3 días seguidos" },
-    { "id": "bdg_04", "iconKey": "headphones", "name": "Buen Oído", "description": "Respondiste correctamente 10 ejercicios auditivos" },
-    { "id": "bdg_05", "iconKey": "map", "name": "Explorador del Pacífico", "description": "Completaste 5 lecciones del Pacífico" },
-    { "id": "bdg_06", "iconKey": "award", "name": "Políglota Regional", "description": "Alcanza el nivel 5 de experiencia" }
-  ]
+  "regionProgress": {
+    "caribe": 0,
+    "andina": 0,
+    "pacifico": 0,
+    "orinoquia": 0,
+    "amazonia": 0
+  },
+  "unlockedBadges": [],
+  "completedChallenges": []
 }

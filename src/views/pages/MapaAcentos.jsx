@@ -1,5 +1,6 @@
+// src/views/pages/MapaAcentos.jsx
 import React from 'react';
-import { MapPin, Palmtree, Waves, Compass, Play } from 'lucide-react';
+import { MapPin, Palmtree, Waves, Compass, Play, Trees } from 'lucide-react';
 import { useRegion } from '../../controllers/useRegion';
 import { useApp } from '../../context/AppContext';
 import { ProgressBar } from '../components/ProgressBar';
@@ -11,13 +12,24 @@ const regionIcons = {
   caribe: Palmtree,
   pacifico: Waves,
   orinoquia: Compass,
+  amazonia: Trees,
 };
 
 export const MapaAcentos = () => {
   const { currentRegion, selectRegion } = useRegion();
   const { setActiveTab } = useApp();
 
-  const CurrentRegionIcon = regionIcons[currentRegion.id] || Compass;
+  const region = currentRegion || {
+    id: 'andina',
+    name: 'Región Andina',
+    accent: 'Acento Rolo / Paisa / Santandereano',
+    description: 'Cargando información de la región...',
+    precision: 0,
+    progress: 0,
+    difficulty: 0,
+  };
+
+  const CurrentRegionIcon = regionIcons[region.id] || MapPin;
 
   return (
     <div className="mapa-container">
@@ -29,28 +41,28 @@ export const MapaAcentos = () => {
           <div className="region-buttons-group">
             <button
               onClick={() => selectRegion('andina')}
-              className={`region-tag ${currentRegion.id === 'andina' ? 'region-tag--andina' : ''}`}
+              className={`region-tag ${region.id === 'andina' ? 'region-tag--andina' : ''}`}
             >
               <MapPin size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
               Región Andina
             </button>
             <button
               onClick={() => selectRegion('caribe')}
-              className={`region-tag ${currentRegion.id === 'caribe' ? 'region-tag--caribe' : ''}`}
+              className={`region-tag ${region.id === 'caribe' ? 'region-tag--caribe' : ''}`}
             >
               <Palmtree size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
               Región Caribe
             </button>
             <button
               onClick={() => selectRegion('pacifico')}
-              className={`region-tag ${currentRegion.id === 'pacifico' ? 'region-tag--pacifico' : ''}`}
+              className={`region-tag ${region.id === 'pacifico' ? 'region-tag--pacifico' : ''}`}
             >
               <Waves size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
               Región Pacífico
             </button>
             <button
               onClick={() => selectRegion('orinoquia')}
-              className={`region-tag ${currentRegion.id === 'orinoquia' ? 'region-tag--orinoquia' : ''}`}
+              className={`region-tag ${region.id === 'orinoquia' ? 'region-tag--orinoquia' : ''}`}
             >
               <Compass size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
               Región Orinoquía
@@ -65,24 +77,25 @@ export const MapaAcentos = () => {
             <CurrentRegionIcon size={28} color="var(--color-rojo-terracota)" />
             <div>
               <span className="region-subtext">REGIÓN</span>
-              <h3 className="region-name">{currentRegion.name}</h3>
+              <h3 className="region-name">{region.name}</h3>
             </div>
           </div>
 
           <div style={{ marginTop: '20px' }}>
+            {/* Etiqueta actualizada a PRECISIÓN */}
             <ProgressBar
-              label="ESTADÍSTICAS"
-              value={currentRegion.stats}
+              label="PRECISIÓN"
+              value={region.precision}
               color="var(--color-neutral)"
             />
             <ProgressBar
               label="PROGRESO"
-              value={currentRegion.progress}
+              value={region.progress}
               color="var(--color-neutral)"
             />
             <ProgressBar
               label="DIFICULTAD"
-              value={currentRegion.difficulty}
+              value={region.difficulty}
               color="var(--color-neutral)"
             />
           </div>
@@ -90,12 +103,12 @@ export const MapaAcentos = () => {
 
         <div className="info-card info-card--flex">
           <div>
-            <h2 className="accent-title">{currentRegion.accent.toUpperCase()}</h2>
+            <h2 className="accent-title">{region.accent ? region.accent.toUpperCase() : ''}</h2>
             <div className="accent-divider" />
-            <p className="accent-description">{currentRegion.description}</p>
+            <p className="accent-description">{region.description}</p>
           </div>
 
-          <ButtonCTA onClick={() => setActiveTab('desafios')} fullWidth>
+          <ButtonCTA onClick={() => setActiveTab('leccion')} fullWidth>
             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
               <Play size={16} fill="currentColor" />
               COMENZAR DESAFÍO

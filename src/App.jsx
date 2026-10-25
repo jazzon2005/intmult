@@ -2,8 +2,9 @@
 import React from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { MainLayout } from './views/layouts/MainLayout';
+import { OnboardingModal } from './views/components/OnboardingModal';
+import { LogrosModal } from './views/components/LogrosModal';
 
-// Importación de las páginas
 import { MapaAcentos } from './views/pages/MapaAcentos';
 import { PanelDesafios } from './views/pages/PanelDesafios';
 import { Comunidad } from './views/pages/Comunidad';
@@ -12,9 +13,8 @@ import { Contacto } from './views/pages/Contacto';
 import { LeccionDiaria } from './views/pages/LeccionDiaria';
 
 const AppContent = () => {
-  const { activeTab } = useApp();
+  const { activeTab, isLogrosModalOpen, closeLogrosModal } = useApp();
 
-  // Diccionario de vistas asociadas a las pestañas del Header Nav
   const renderPage = () => {
     switch (activeTab) {
       case 'mapa':
@@ -34,7 +34,13 @@ const AppContent = () => {
     }
   };
 
-  return <MainLayout>{renderPage()}</MainLayout>;
+  return (
+    <MainLayout>
+      {renderPage()}
+      <OnboardingModal />
+      <LogrosModal isOpen={isLogrosModalOpen} onClose={closeLogrosModal} />
+    </MainLayout>
+  );
 };
 
 export default function App() {

@@ -1,71 +1,76 @@
 // src/controllers/useLesson.js
-import { useState, useRef } from 'react';
+import { useState, useMemo } from 'react';
+import { QUESTIONS_BANK } from '../data/questionsBank';
 import { useApp } from '../context/AppContext';
-import { LESSON_SAMPLE } from '../models/lessonModel';
 
-export const useLesson = (lessonData = LESSON_SAMPLE) => {
-  const { completeChallenge } = useApp();
-  
-  const [selectedOptionId, setSelectedOptionId] = useState(null);
+export const useLesson = (regionIdFilter = null) => {
+  const { recordAnswer, completeChallenge, setActiveTab } = useApp();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(null);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  
-  const audioRef = useRef(new Audio(lessonData.audioUrl));
+  const [score, setScore] = useState(0);
 
-  // Maneja la reproducción del audio regional
-  const playAudio = () => {
-    if (isPlayingAudio) return;
-    
-    setIsPlayingAudio(true);
-    audioRef.current.play()
-      .then(() => {
-        // Simulación o evento real de finalización
-        audioRef.current.onended = () => setIsPlayingAudio(false);
-      })
-      .catch(() => {
-        // En caso de bloqueo por el navegador, resetea el estado
-        setIsPlayingAudio(false);
-      });
-  };
+  // Obtener pool de preguntas (Filtrado por región o Desafío Diario variado)
+  const questionsList = useMemo(() => {
+    if (regionIdFilter) {
+      return QUESTIONS_BANK.filter((q) => q.regionId === regionIdFilter);
+    }
+    return [...QUESTIONS_BANK].sort(() => 0.5 - Math.random()).slice(0, 4);
+  }, [regionIdFilter]);
 
-  // Selección de una alternativa de respuesta
-  const selectOption = (optionId) => {
-    if (isSubmitted) return; // Bloquea si ya respondió
-    setSelectedOptionId(optionId);
-  };
+  const currentQuestion = questionsList[currentIndex] || questionsList[0];
 
-  // Verificación de la respuesta
-  const checkAnswer = () => {
-    if (!selectedOptionId || isSubmitted) return;
-
-    const selectedOption = lessonData.options.find((opt) => opt.id === selectedOptionId);
-    const correct = selectedOption?.isCorrect ?? false;
-
-    setIsSubmitted(true);
-    setIsCorrect(correct);
-
-    if (correct) {
-      completeChallenge(lessonData.id);
+  const handleSelectOption = (index) => {
+    if (!isSubmitted) {
+      setSelectedOption(index);
     }
   };
 
-  const resetLesson = () => {
-    setSelectedOptionId(null);
+  const handleSubmit = () => {
+    if (selectedOption === null || isSubmitted) return;
+
+    const isCorrect = selectedOption === currentQuestion.correctAnswer;
+    setIsSubmitted(true);
+
+    const xpTable = { facil: 15, medio: 30, dificil: 50 };
+    const xpEarned = xpTable[currentQuestion.difficulty] || 15;
+
+    if (isCorrect) {
+      setScore((prev) => prev + 1);
+    }
+
+    recordAnswer(currentQuestion.regionId, isCorrect, xpEarned);
+  };
+
+  const handleNext = () => {
+    if (currentIndex + 1 < questionsList.length) {
+      setCurrentIndex((prev) => prev + 1);
+      setSelectedOption(null);
+      setIsSubmitted(false);
+    } else {
+      completeChallenge('ch_day_1', currentQuestion.regionId, 50);
+      setActiveTab('desafios');
+    }
+  };
+
+  // Reiniciar la lección desde la pregunta 1
+  const restartLesson = () => {
+    setCurrentIndex(0);
+    setSelectedOption(null);
     setIsSubmitted(false);
-    setIsCorrect(null);
-    setIsPlayingAudio(false);
+    setScore(0);
   };
 
   return {
-    lesson: lessonData,
-    selectedOptionId,
+    currentQuestion,
+    currentIndex,
+    totalQuestions: questionsList.length,
+    selectedOption,
     isSubmitted,
-    isCorrect,
-    isPlayingAudio,
-    playAudio,
-    selectOption,
-    checkAnswer,
-    resetLesson,
+    score,
+    handleSelectOption,
+    handleSubmit,
+    handleNext,
+    restartLesson
   };
 };
