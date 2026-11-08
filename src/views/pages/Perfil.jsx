@@ -16,7 +16,7 @@ const REGION_CONFIG = [
 ];
 
 export const Perfil = () => {
-  const { user, stats, regionProgress, badgesList } = useUser();
+  const { user, stats, regionProgress, badgesList, levelData } = useUser();
   const { openLogrosModal } = useApp();
   const [selectedBadge, setSelectedBadge] = useState(null);
 
@@ -26,19 +26,37 @@ export const Perfil = () => {
   const lockedBadges = badgesList.filter((b) => !b.unlocked);
   const displayedBadges = [...unlockedBadges, ...lockedBadges].slice(0, 6);
 
+  const currentXP = stats?.currentXP || 0;
+  const nextLevelXP = stats?.nextLevelXP || 500;
+
   return (
     <div className="perfil-container">
-      {/* Encabezado del Perfil */}
+      {/* Encabezado del Perfil con Barra de Experiencia */}
       <div className="profile-header">
         <div className="profile-avatar">{user.avatar}</div>
         <div className="profile-info">
           <h1>{user.name}</h1>
           <p className="profile-subtitle">
-            {user.email} • {user.role}
+            {user.email} • {user.role || 'Explorador Dialectal'}
           </p>
-          <span className="profile-badge">
-            NIVEL {stats?.currentLevel || 1}: {(stats?.levelTitle || 'Novato').toUpperCase()}
-          </span>
+
+          {/* Barra de Experiencia y Nivel */}
+          <div className="profile-xp-wrapper">
+            <div className="profile-xp-header">
+              <span className="profile-badge">
+                NIVEL {levelData.currentLevel}: {levelData.levelTitle.toUpperCase()}
+              </span>
+              <span className="profile-xp-text">
+                <strong>{currentXP.toLocaleString()}</strong> / {nextLevelXP.toLocaleString()} XP
+              </span>
+            </div>
+            <div className="profile-xp-track">
+              <div
+                className="profile-xp-fill"
+                style={{ width: `${levelData.progressPercentage}%` }}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -52,7 +70,7 @@ export const Perfil = () => {
         </div>
 
         <div className="stat-card stat-card--yellow">
-          <div className="stat-value">{(stats?.currentXP || 0).toLocaleString()}</div>
+          <div className="stat-value">{currentXP.toLocaleString()}</div>
           <div className="stat-label">
             XP TOTAL <Zap size={14} color="var(--color-amarillo-colombia)" />
           </div>
@@ -63,8 +81,7 @@ export const Perfil = () => {
             {stats?.exploredRegionsCount || 0} / {stats?.totalRegionsCount || 5}
           </div>
           <div className="stat-label">
-            REGIONES <Map size={14} color="var(--color-azul-oceano)" />
-          </div>
+            REGIONES          </div>
         </div>
 
         <div className="stat-card stat-card--green">

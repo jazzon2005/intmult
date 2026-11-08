@@ -185,3 +185,83 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* src/views/pages/Perfil.css - Sección XP Bar */
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.profile-xp-wrapper {
+  margin-top: 10px;
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-xp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profile-badge {
+  display: inline-block;
+  background-color: var(--color-amarillo-colombia, #f39c12);
+  color: var(--color-cafe-oscuro, #3e2723);
+  font-size: 11px;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+.profile-xp-text {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-cafe-oscuro-muted, #795548);
+}
+
+.profile-xp-text strong {
+  color: var(--color-cafe-oscuro, #3e2723);
+}
+
+.profile-xp-track {
+  width: 100%;
+  height: 10px;
+  background-color: rgba(62, 39, 35, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.profile-xp-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-amarillo-colombia, #f39c12) 0%,
+    var(--color-rojo-terracota, #d35400) 100%
+  );
+  border-radius: 6px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsivo para celulares */
+@media (max-width: 768px) {
+  .profile-xp-wrapper {
+    max-width: 100%;
+    margin-top: 12px;
+  }
+
+  .profile-xp-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+}

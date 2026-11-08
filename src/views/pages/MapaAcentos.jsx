@@ -17,7 +17,7 @@ const regionIcons = {
 
 export const MapaAcentos = () => {
   const { currentRegion, selectRegion } = useRegion();
-  const { setActiveTab } = useApp();
+  const { startRegionLesson } = useApp();
 
   const region = currentRegion || {
     id: 'andina',
@@ -67,6 +67,13 @@ export const MapaAcentos = () => {
               <Compass size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
               Región Orinoquía
             </button>
+            <button
+              onClick={() => selectRegion('amazonia')}
+              className={`region-tag ${region.id === 'amazonia' ? 'region-tag--amazonia' : ''}`}
+            >
+              <Trees size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+              Región Amazonía
+            </button>
           </div>
         </div>
       </div>
@@ -82,7 +89,6 @@ export const MapaAcentos = () => {
           </div>
 
           <div style={{ marginTop: '20px' }}>
-            {/* Etiqueta actualizada a PRECISIÓN */}
             <ProgressBar
               label="PRECISIÓN"
               value={region.precision}
@@ -108,10 +114,10 @@ export const MapaAcentos = () => {
             <p className="accent-description">{region.description}</p>
           </div>
 
-          <ButtonCTA onClick={() => setActiveTab('leccion')} fullWidth>
+          <ButtonCTA onClick={() => startRegionLesson(region.id)} fullWidth>
             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
               <Play size={16} fill="currentColor" />
-              COMENZAR DESAFÍO
+              COMENZAR DESAFÍO DE {region.name.toUpperCase()}
             </span>
           </ButtonCTA>
         </div>

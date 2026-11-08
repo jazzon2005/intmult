@@ -1,0 +1,121 @@
+/* src/views/components/NotificationToast.css */
+.toast-container-fixed {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.toast-card {
+  pointer-events: auto;
+  min-width: 300px;
+  max-width: 380px;
+  background-color: var(--color-beige-arena-light, #fbf8f3);
+  border-radius: var(--radius-lg, 16px);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(62, 39, 35, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 2px solid transparent;
+  animation: toastSlideIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+}
+
+.toast-card--levelup {
+  border-color: var(--color-amarillo-colombia, #f39c12);
+}
+
+.toast-card--badge {
+  border-color: var(--color-rojo-terracota, #d35400);
+}
+
+.toast-icon-wrapper {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.toast-card--levelup .toast-icon-wrapper {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.toast-card--badge .toast-icon-wrapper {
+  background: linear-gradient(135deg, #d35400, #e74c3c);
+}
+
+.toast-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.toast-tag {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  color: var(--color-cafe-oscuro-muted, #795548);
+}
+
+.toast-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--color-cafe-oscuro, #3e2723);
+  margin: 2px 0 0 0;
+  line-height: 1.2;
+}
+
+.toast-message {
+  font-size: 12px;
+  color: var(--color-cafe-oscuro-muted, #795548);
+  margin: 2px 0 0 0;
+}
+
+.toast-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-cafe-oscuro-muted, #795548);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+}
+
+.toast-close-btn:hover {
+  background-color: rgba(62, 39, 35, 0.08);
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(60px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .toast-container-fixed {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+  }
+
+  .toast-card {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}

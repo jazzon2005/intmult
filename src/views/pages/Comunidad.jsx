@@ -87,14 +87,6 @@ export const Comunidad = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer CTA */}
-      <section className="footer-cta">
-        <h2>Aprende dialectos con Voces de Colombia</h2>
-        <div style={{ maxWidth: '300px', margin: '0 auto' }}>
-          <ButtonCTA variant="primary" fullWidth>EMPEZAR AHORA</ButtonCTA>
-        </div>
-      </section>
     </div>
   );
 };

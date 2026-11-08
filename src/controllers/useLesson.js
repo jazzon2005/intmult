@@ -1,22 +1,76 @@
 // src/controllers/useLesson.js
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { QUESTIONS_BANK } from '../data/questionsBank';
 import { useApp } from '../context/AppContext';
 
-export const useLesson = (regionIdFilter = null) => {
-  const { recordAnswer, completeChallenge, setActiveTab } = useApp();
+/**
+ * Función auxiliar para mezclar un arreglo usando el algoritmo Fisher-Yates
+ */
+const shuffleArray = (array) => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
+/**
+ * Mezcla las opciones de una pregunta y reasigna el índice `correctAnswer` a su nueva posición
+ */
+const randomizeQuestionOptions = (question) => {
+  const correctOptionText = question.options[question.correctAnswer];
+  const shuffledOptions = shuffleArray(question.options);
+  const newCorrectIndex = shuffledOptions.indexOf(correctOptionText);
+
+  return {
+    ...question,
+    options: shuffledOptions,
+    correctAnswer: newCorrectIndex
+  };
+};
+
+export const useLesson = () => {
+  const {
+    recordAnswer,
+    completeChallenge,
+    setActiveTab,
+    selectedRegionId,
+    correctQuestionIds
+  } = useApp();
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState(0);
+  const [questionsList, setQuestionsList] = useState([]);
 
-  // Obtener pool de preguntas (Filtrado por región o Desafío Diario variado)
-  const questionsList = useMemo(() => {
-    if (regionIdFilter) {
-      return QUESTIONS_BANK.filter((q) => q.regionId === regionIdFilter);
-    }
-    return [...QUESTIONS_BANK].sort(() => 0.5 - Math.random()).slice(0, 4);
-  }, [regionIdFilter]);
+  // Genera la tanda de 5 preguntas y randomiza sus opciones de respuesta
+  const loadQuestionsBatch = useCallback(() => {
+    const basePool = selectedRegionId
+      ? QUESTIONS_BANK.filter((q) => q.regionId === selectedRegionId)
+      : [...QUESTIONS_BANK];
+
+    const pendingQuestions = basePool.filter((q) => !correctQuestionIds.includes(q.id));
+    const solvedQuestions = basePool.filter((q) => correctQuestionIds.includes(q.id));
+
+    const shuffledPending = shuffleArray(pendingQuestions);
+    const shuffledSolved = shuffleArray(solvedQuestions);
+
+    const combined = [...shuffledPending, ...shuffledSolved].slice(0, 5);
+
+    // Randomizar el orden de las 4 opciones A, B, C, D de cada pregunta seleccionada
+    return combined.map(randomizeQuestionOptions);
+  }, [selectedRegionId]);
+
+  // Inicializar preguntas al cargar o cambiar de región
+  useEffect(() => {
+    setQuestionsList(loadQuestionsBatch());
+    setCurrentIndex(0);
+    setSelectedOption(null);
+    setIsSubmitted(false);
+    setScore(0);
+  }, [selectedRegionId, loadQuestionsBatch]);
 
   const currentQuestion = questionsList[currentIndex] || questionsList[0];
 
@@ -39,7 +93,7 @@ export const useLesson = (regionIdFilter = null) => {
       setScore((prev) => prev + 1);
     }
 
-    recordAnswer(currentQuestion.regionId, isCorrect, xpEarned);
+    recordAnswer(currentQuestion.id, currentQuestion.regionId, isCorrect, xpEarned);
   };
 
   const handleNext = () => {
@@ -53,8 +107,8 @@ export const useLesson = (regionIdFilter = null) => {
     }
   };
 
-  // Reiniciar la lección desde la pregunta 1
   const restartLesson = () => {
+    setQuestionsList(loadQuestionsBatch());
     setCurrentIndex(0);
     setSelectedOption(null);
     setIsSubmitted(false);

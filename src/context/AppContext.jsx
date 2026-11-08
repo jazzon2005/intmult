@@ -1,22 +1,27 @@
 // src/context/AppContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { userService } from '../services/userService';
+import { getLevelDetails } from '../utils/levelSystem';
+import { QUESTIONS_BANK } from '../data/questionsBank';
+import { NotificationToast } from '../views/components/NotificationToast';
 
 const AppContext = createContext();
 
 const MASTER_CHALLENGES = [
-  { id: 'ch_day_1', day: 'DÍA 1', title: 'Acentos del Caribe' },
-  { id: 'ch_day_2', day: 'DÍA 2', title: 'Modismos Paisas' },
-  { id: 'ch_day_3', day: 'DÍA 3', title: 'Expresiones Caleñas' },
-  { id: 'ch_day_4', day: 'DÍA 4', title: 'Jerga Bogotana' },
-  { id: 'ch_day_5', day: 'DÍA 5', title: 'El uso de "¡A la orden!"' },
-  { id: 'ch_day_6', day: 'DÍA 6', title: 'Dialecto Santandereano' }
+  { id: 'ch_day_1', day: 'DÍA 1', title: 'Acentos del Caribe', regionId: 'caribe' },
+  { id: 'ch_day_2', day: 'DÍA 2', title: 'Modismos Paisas', regionId: 'andina' },
+  { id: 'ch_day_3', day: 'DÍA 3', title: 'Expresiones Caleñas', regionId: 'pacifico' },
+  { id: 'ch_day_4', day: 'DÍA 4', title: 'Jerga Bogotana', regionId: 'andina' },
+  { id: 'ch_day_5', day: 'DÍA 5', title: 'Vocabulario del Llano', regionId: 'orinoquia' },
+  { id: 'ch_day_6', day: 'DÍA 6', title: 'Saberes Amazónicos', regionId: 'amazonia' }
 ];
 
 export const AppProvider = ({ children }) => {
   const [activeTab, setActiveTab] = useState('mapa');
+  const [selectedRegionId, setSelectedRegionId] = useState(null);
   const [userData, setUserData] = useState(() => userService.getActiveUserData());
   const [isLogrosModalOpen, setIsLogrosModalOpen] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     if (userData) {
@@ -37,6 +42,15 @@ export const AppProvider = ({ children }) => {
     };
   });
 
+  const startRegionLesson = (regionId = null) => {
+    setSelectedRegionId(regionId);
+    setActiveTab('leccion');
+  };
+
+  const triggerToast = (toastData) => {
+    setNotification(toastData);
+  };
+
   const register = (credentials) => {
     const newAccount = userService.registerUser(credentials);
     setUserData(newAccount);
@@ -50,10 +64,11 @@ export const AppProvider = ({ children }) => {
   const logout = () => {
     userService.logoutUser();
     setUserData(null);
+    setSelectedRegionId(null);
     setActiveTab('mapa');
   };
 
-  const recordAnswer = (regionId, isCorrect, xpReward = 15) => {
+  const recordAnswer = (questionId, regionId, isCorrect, xpReward = 15) => {
     if (!userData) return;
 
     setUserData((prev) => {
@@ -65,30 +80,75 @@ export const AppProvider = ({ children }) => {
         total: currentAcc.total + 1
       };
 
+      const currentCorrectIds = prev.correctQuestionIds || [];
+      const updatedCorrectIds =
+        isCorrect && !currentCorrectIds.includes(questionId)
+          ? [...currentCorrectIds, questionId]
+          : currentCorrectIds;
+
+      // CALCULAR PROGRESO REAL DE LA REGIÓN (Preguntas acertadas de la región / Total en banco)
+      const totalRegionQuestions = QUESTIONS_BANK.filter((q) => q.regionId === regionId).length || 20;
+      const correctInRegionCount = updatedCorrectIds.filter((qId) => {
+        const q = QUESTIONS_BANK.find((item) => item.id === qId);
+        return q && q.regionId === regionId;
+      }).length;
+
+      const calculatedRegionProgress = Math.min(
+        100,
+        Math.round((correctInRegionCount / totalRegionQuestions) * 100)
+      );
+
       const addedXP = isCorrect ? xpReward : 0;
-      const currentXP = prev.stats?.currentXP || 0;
-      const nextXP = prev.stats?.nextLevelXP || 500;
-      const newXP = currentXP + addedXP;
+      const currentXP = (prev.stats?.currentXP || 0) + addedXP;
+      const oldLevel = prev.stats?.currentLevel || 1;
+      
+      const levelDetails = getLevelDetails(currentXP);
 
-      let newLevel = prev.stats?.currentLevel || 1;
-      let newLevelTitle = prev.stats?.levelTitle || 'Novato Dialectal';
+      if (levelDetails.currentLevel > oldLevel) {
+        triggerToast({
+          type: 'levelup',
+          title: `¡Subiste al Nivel ${levelDetails.currentLevel}!`,
+          message: `Nuevo rango desbloqueado: ${levelDetails.levelTitle}`
+        });
+      }
 
-      if (newXP >= nextXP) {
-        newLevel += 1;
-        newLevelTitle = 'Maestro Dialectal';
+      const currentHour = new Date().getHours();
+      const updatedUnlockedBadges = [...(prev.unlockedBadges || [])];
+
+      if (currentHour < 8 && !updatedUnlockedBadges.includes('madrugador')) {
+        updatedUnlockedBadges.push('madrugador');
+        triggerToast({
+          type: 'badge',
+          title: '¡Logro Desbloqueado!',
+          message: 'Madrugador Dialectal'
+        });
+      } else if (currentHour >= 22 && !updatedUnlockedBadges.includes('buho_sabiduria')) {
+        updatedUnlockedBadges.push('buho_sabiduria');
+        triggerToast({
+          type: 'badge',
+          title: '¡Logro Desbloqueado!',
+          message: 'Búho del Conocimiento'
+        });
       }
 
       return {
         ...prev,
+        correctQuestionIds: updatedCorrectIds,
+        unlockedBadges: updatedUnlockedBadges,
         regionAccuracy: {
           ...(prev.regionAccuracy || {}),
           [regionId]: updatedAcc
         },
+        regionProgress: {
+          ...(prev.regionProgress || {}),
+          [regionId]: Math.max(prev.regionProgress?.[regionId] || 0, calculatedRegionProgress)
+        },
         stats: {
           ...prev.stats,
-          currentXP: newXP,
-          currentLevel: newLevel,
-          levelTitle: newLevelTitle
+          currentXP,
+          currentLevel: levelDetails.currentLevel,
+          levelTitle: levelDetails.levelTitle,
+          nextLevelXP: levelDetails.nextLevelXP
         }
       };
     });
@@ -106,18 +166,33 @@ export const AppProvider = ({ children }) => {
         : [...currentCompleted, challengeId];
 
       const currentRegionProg = prev.regionProgress?.[regionId] || 0;
-      const newRegionProg = Math.min(100, currentRegionProg + 20);
+      const newRegionProg = Math.min(100, currentRegionProg + 25);
+      const currentXP = (prev.stats?.currentXP || 0) + (isAlreadyCompleted ? 0 : xpEarned);
+      const oldLevel = prev.stats?.currentLevel || 1;
+
+      const levelDetails = getLevelDetails(currentXP);
+
+      if (levelDetails.currentLevel > oldLevel) {
+        triggerToast({
+          type: 'levelup',
+          title: `¡Subiste al Nivel ${levelDetails.currentLevel}!`,
+          message: `Nuevo rango desbloqueado: ${levelDetails.levelTitle}`
+        });
+      }
 
       return {
         ...prev,
         completedChallenges: updatedChallenges,
         regionProgress: {
           ...(prev.regionProgress || {}),
-          [regionId]: newRegionProg
+          [regionId]: Math.max(currentRegionProg, newRegionProg)
         },
         stats: {
           ...prev.stats,
-          currentXP: (prev.stats?.currentXP || 0) + (isAlreadyCompleted ? 0 : xpEarned)
+          currentXP,
+          currentLevel: levelDetails.currentLevel,
+          levelTitle: levelDetails.levelTitle,
+          nextLevelXP: levelDetails.nextLevelXP
         }
       };
     });
@@ -128,10 +203,14 @@ export const AppProvider = ({ children }) => {
       value={{
         activeTab,
         setActiveTab,
+        selectedRegionId,
+        startRegionLesson,
+        triggerToast,
         user: userData?.user || null,
         stats: userData?.stats || null,
         regionProgress: userData?.regionProgress || {},
         regionAccuracy: userData?.regionAccuracy || {},
+        correctQuestionIds: userData?.correctQuestionIds || [],
         unlockedBadges: userData?.unlockedBadges || [],
         completedChallenges: userData?.completedChallenges || [],
         challenges,
@@ -146,6 +225,15 @@ export const AppProvider = ({ children }) => {
       }}
     >
       {children}
+
+      <div className="toast-container-fixed">
+        {notification && (
+          <NotificationToast
+            notification={notification}
+            onClose={() => setNotification(null)}
+          />
+        )}
+      </div>
     </AppContext.Provider>
   );
 };

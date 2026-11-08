@@ -1,120 +1,178 @@
 // src/views/components/HeaderNav.jsx
-import React, { useState, useRef, useEffect } from 'react';
-import { User, LogOut, ChevronDown, LogIn, Award } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  Menu,
+  X,
+  MapPin,
+  BookOpen,
+  Trophy,
+  Users,
+  Mail,
+  User,
+  LogOut,
+  ChevronDown,
+  Award
+} from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import './HeaderNav.css';
 
 export const HeaderNav = () => {
-  const { activeTab, setActiveTab, user, logout, openLogrosModal } = useApp();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
+  const { activeTab, setActiveTab, user, openLogrosModal, logout } = useApp();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
   const navItems = [
-    { id: 'mapa', label: 'MAPA' },
-    { id: 'desafios', label: 'DESAFÍOS' },
-    { id: 'comunidad', label: 'COMUNIDAD' },
-    { id: 'contacto', label: 'CONTACTO' },
+    { id: 'mapa', label: 'Mapa de Acentos', icon: MapPin },
+    { id: 'leccion', label: 'Lección Diaria', icon: BookOpen },
+    { id: 'desafios', label: 'Desafíos', icon: Trophy },
+    { id: 'comunidad', label: 'Comunidad', icon: Users },
+    { id: 'contacto', label: 'Contacto', icon: Mail }
   ];
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const handleSelectTab = (tabId) => {
+    setActiveTab(tabId);
+    setIsMobileMenuOpen(false);
+    setIsProfileDropdownOpen(false);
+  };
+
+  const handleLogout = () => {
+    setIsMobileMenuOpen(false);
+    setIsProfileDropdownOpen(false);
+    logout();
+  };
 
   return (
     <header className="header-nav-container">
       <div className="header-nav-wrapper">
-        <nav className="header-nav">
-          {navItems.map((item) => {
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`nav-button ${isActive ? 'nav-button--active' : ''}`}
-              >
-                {item.label}
-              </button>
-            );
-          })}
+        {/* Marca / Logo visible en móvil y escritorio */}
+        <div className="header-brand" onClick={() => handleSelectTab('mapa')}>
+          <span className="brand-title">DIALECTOS CO</span>
+        </div>
+
+        {/* NAVEGACIÓN DESKTOP */}
+        <nav className="header-nav header-nav--desktop">
+          {navItems.map(({ id, label }) => (
+            <button
+              key={id}
+              onClick={() => handleSelectTab(id)}
+              className={`nav-button ${activeTab === id ? 'nav-button--active' : ''}`}
+            >
+              {label}
+            </button>
+          ))}
         </nav>
 
-        {/* Sección de perfil desplegable */}
-        <div className="header-profile-section" ref={menuRef}>
-          <button
-            className={`profile-icon-btn ${activeTab === 'perfil' ? 'profile-icon-btn--active' : ''}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            title={user ? user.name : 'Perfil'}
-          >
-            {user?.avatar ? (
-              <span className="profile-avatar-circle">{user.avatar}</span>
-            ) : (
-              <User size={18} />
-            )}
-            <ChevronDown size={14} className={`menu-chevron ${menuOpen ? 'menu-chevron--open' : ''}`} />
-          </button>
+        {/* PERFIL DESKTOP */}
+        {user && (
+          <div className="header-profile-section header-profile--desktop">
+            <button
+              className={`profile-icon-btn ${isProfileDropdownOpen ? 'profile-icon-btn--active' : ''}`}
+              onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+            >
+              <div className="profile-avatar-circle">{user.avatar || 'U'}</div>
+              <ChevronDown
+                size={16}
+                className={`menu-chevron ${isProfileDropdownOpen ? 'menu-chevron--open' : ''}`}
+              />
+            </button>
 
-          {menuOpen && (
-            <div className="profile-dropdown-menu">
-              {user ? (
-                <>
-                  <div className="dropdown-user-info">
-                    <span className="dropdown-user-name">{user.name}</span>
-                    <span className="dropdown-user-email">{user.email}</span>
-                  </div>
-                  <div className="dropdown-divider" />
-                  <button
-                    className="dropdown-item"
-                    onClick={() => {
-                      setActiveTab('perfil');
-                      setMenuOpen(false);
-                    }}
-                  >
-                    <User size={16} /> Ver mi Perfil
-                  </button>
-
-                  {/* NUEVO BOTÓN PARA VER LOGROS */}
-                  <button
-                    className="dropdown-item"
-                    onClick={() => {
-                      openLogrosModal();
-                      setMenuOpen(false);
-                    }}
-                  >
-                    <Award size={16} color="var(--color-rojo-terracota)" /> Mis Logros
-                  </button>
-
-                  <div className="dropdown-divider" />
-                  <button
-                    className="dropdown-item dropdown-item--danger"
-                    onClick={() => {
-                      logout();
-                      setMenuOpen(false);
-                    }}
-                  >
-                    <LogOut size={16} /> Cerrar Sesión
-                  </button>
-                </>
-              ) : (
+            {isProfileDropdownOpen && (
+              <div className="profile-dropdown-menu">
+                <div className="dropdown-user-info">
+                  <span className="dropdown-user-name">{user.name}</span>
+                  <span className="dropdown-user-email">{user.email}</span>
+                </div>
+                <div className="dropdown-divider" />
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleSelectTab('perfil')}
+                >
+                  <User size={16} /> Ver Perfil
+                </button>
                 <button
                   className="dropdown-item"
                   onClick={() => {
-                    setActiveTab('perfil');
-                    setMenuOpen(false);
+                    setIsProfileDropdownOpen(false);
+                    openLogrosModal();
                   }}
                 >
-                  <LogIn size={16} /> Iniciar Sesión / Registro
+                  <Award size={16} /> Ver Logros
                 </button>
-              )}
-            </div>
-          )}
-        </div>
+                <div className="dropdown-divider" />
+                <button
+                  className="dropdown-item dropdown-item--danger"
+                  onClick={handleLogout}
+                >
+                  <LogOut size={16} /> Cerrar Sesión
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* BOTÓN HAMBURGUESA (MÓVIL) */}
+        <button
+          className="hamburger-toggle-btn"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
+
+      {/* MENÚ HAMBURGUESA DESPLEGABLE Y FIJO (MÓVIL) */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="mobile-drawer-menu" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-menu-links">
+              {navItems.map(({ id, label, icon: IconComp }) => (
+                <button
+                  key={id}
+                  onClick={() => handleSelectTab(id)}
+                  className={`mobile-menu-item ${activeTab === id ? 'mobile-menu-item--active' : ''}`}
+                >
+                  <IconComp size={18} />
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* SECCIÓN PERFIL AL FINAL DEL MENÚ HAMBURGUESA */}
+            {user && (
+              <div className="mobile-menu-footer">
+                <div className="dropdown-divider" />
+                <button
+                  onClick={() => handleSelectTab('perfil')}
+                  className={`mobile-menu-item mobile-menu-item--profile ${activeTab === 'perfil' ? 'mobile-menu-item--active' : ''}`}
+                >
+                  <div className="profile-avatar-circle">{user.avatar || 'U'}</div>
+                  <div className="mobile-user-details">
+                    <span className="mobile-user-name">{user.name}</span>
+                    <span className="mobile-user-sub">Ver Perfil</span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    openLogrosModal();
+                  }}
+                  className="mobile-menu-item"
+                >
+                  <Award size={18} />
+                  <span>Mis Logros</span>
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="mobile-menu-item mobile-menu-item--danger"
+                >
+                  <LogOut size={18} />
+                  <span>Cerrar Sesión</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };

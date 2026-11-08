@@ -125,6 +125,8 @@ export const LeccionDiaria = () => {
                 borderRadius: '8px',
                 fontWeight: '700',
                 cursor: 'pointer',
+                borderWidth: '2px',
+                borderStyle: 'solid',
                 borderColor: 'var(--color-cafe-oscuro-muted)'
               }}
               onClick={handleRestart}
@@ -142,12 +144,14 @@ export const LeccionDiaria = () => {
                 borderRadius: '8px',
                 fontWeight: '700',
                 cursor: 'pointer',
+                borderWidth: '2px',
+                borderStyle: 'solid',
                 borderColor: 'var(--color-cafe-oscuro-muted)'
               }}
               onClick={() => setActiveTab('mapa')}
             >
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                <Map size={18} /> VOLVER AL MAPA
+                 VOLVER AL MAPA
               </span>
             </button>
           </div>
@@ -194,7 +198,9 @@ export const LeccionDiaria = () => {
             let optionStyle = {
               padding: '12px 16px',
               borderRadius: '8px',
-              border: '1px solid rgba(62, 39, 35, 0.2)',
+              borderWidth: '2px',
+              borderStyle: 'solid',
+              borderColor: 'rgba(62, 39, 35, 0.2)',
               backgroundColor: 'var(--color-blanco)',
               textAlign: 'left',
               cursor: isSubmitted ? 'default' : 'pointer',
