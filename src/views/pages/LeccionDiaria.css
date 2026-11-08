@@ -243,3 +243,29 @@
     transform: scale(1);
   }
 }
+
+/* Agregar al final de LeccionDiaria.css */
+@media (max-width: 640px) {
+  .leccion-container {
+    padding: 4px;
+  }
+
+  .question-card,
+  .completion-card {
+    padding: 18px 14px;
+  }
+
+  .completion-stats-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .completion-stat-box {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .completion-actions {
+    gap: 8px;
+  }
+}

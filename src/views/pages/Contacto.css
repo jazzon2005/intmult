@@ -71,3 +71,53 @@
   resize: vertical;
   min-height: 120px;
 }
+
+/* Media Queries Responsive */
+@media (max-width: 768px) {
+  .contacto-container {
+    max-width: 100%;
+    padding: 0 8px;
+  }
+
+  .contacto-card {
+    padding: 24px 20px;
+  }
+
+  .contacto-title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contacto-container {
+    gap: 16px;
+  }
+
+  .contacto-card {
+    padding: 20px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .contacto-title {
+    font-size: 20px;
+  }
+
+  .contacto-subtitle {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  .form-group label {
+    font-size: 11px;
+  }
+
+  .form-input,
+  .form-textarea {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .form-textarea {
+    min-height: 100px;
+  }
+}

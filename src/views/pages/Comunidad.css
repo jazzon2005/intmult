@@ -175,3 +175,91 @@
   color: var(--color-cafe-oscuro);
   margin-bottom: 20px;
 }
+
+/* Media Queries Responsive */
+@media (max-width: 768px) {
+  .comunidad-container {
+    gap: 32px;
+    padding-bottom: 24px;
+  }
+
+  .hero-section {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .hero-illustration {
+    padding: 36px 16px;
+  }
+
+  .hero-content h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .exploration-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .exploration-image {
+    height: 120px;
+    order: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-heading {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .grid-3 {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .card-base {
+    padding: 16px;
+  }
+
+  .news-title {
+    font-size: 15px;
+  }
+
+  .hero-illustration {
+    padding: 28px 12px;
+  }
+
+  .hero-illustration svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .hero-content h1 {
+    font-size: 20px;
+  }
+
+  .btn-outline {
+    font-size: 14px;
+    padding: 12px 20px;
+  }
+
+  .exploration-text h3 {
+    font-size: 16px;
+  }
+
+  .exploration-text p {
+    font-size: 13px;
+  }
+
+  .review-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .footer-cta h2 {
+    font-size: 18px;
+  }
+}

@@ -120,3 +120,29 @@
   color: var(--color-cafe-oscuro-muted);
   margin-bottom: 20px;
 }
+
+/* Agregar al final de MapaAcentos.css */
+@media (max-width: 850px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .region-buttons-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .region-tag {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .map-card {
+    padding: 16px;
+  }
+}
