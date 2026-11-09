@@ -46,7 +46,7 @@ export const HeaderNav = () => {
       <div className="header-nav-wrapper">
         {/* Marca / Logo visible en móvil y escritorio */}
         <div className="header-brand" onClick={() => handleSelectTab('mapa')}>
-          <span className="brand-title">VOCES DE COLOMBIA</span>
+          <span className="brand-title">VOCES DE COL</span>
         </div>
 
         {/* NAVEGACIÓN DESKTOP */}
